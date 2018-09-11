@@ -68,6 +68,25 @@ final class DataStreamWriter[T] private[sql](ds: Dataset[T]) {
    *                 contain aggregations, it will be equivalent to `append` mode.
    * @since 2.0.0
    */
+  /*
+  complete模式
+    (1)从Batch 0 ~ Batch n 的Sink结果都放在一个大表中
+    (2)每个Batch 的Sink都输出`整个表`
+
+  update 模式
+    (1)从Batch 0 ~ Batch n 的Sink结果都放在一个大表中
+    (2)每个Batch Sink只输出`相较于历史所有更新部分`的结果
+    (3)如
+        第一次Batch 0
+          BBB 1,AAA 2
+        第二次Batch 1
+          CCC 1,AAA 4
+
+  append 模式
+    (1)从Batch 0 ~ Batch n 的Sink结果都放在一个大表中
+    (2)每个Batch Sink只输出append部分
+    注意:默认模式。
+   */
   def outputMode(outputMode: String): DataStreamWriter[T] = {
     this.outputMode = InternalOutputModes(outputMode)
     this
